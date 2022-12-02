@@ -24,10 +24,10 @@ int size(node *head)
 }
 
 // function to check if list is empty
-char *empty(node *head)
+const char *empty(node *head)
 {
-	char *yes = "yes";
-	char *no = "no";
+	const char *yes = "yes";
+	const char *no = "no";
 	return head == NULL ? yes : no;
 }
 
@@ -85,6 +85,25 @@ void push_front(int data, node **head)
 	}
 }
 
+// remove front element and return its value
+void pop_front(node *head){
+	node * temp = head;
+	temp->data	= (head->next)->data;
+	temp->next	= (head->next)->next;
+	
+	head = temp;
+}
+
+// free all dynamically allocated memory
+void freeList(node *head){
+while(head)
+{
+	node * temp = head->next;
+	free(head);
+	head = temp;
+}
+}
+
 int main(int argc, char const *argv[])
 {
 	node *head = NULL;
@@ -98,8 +117,9 @@ int main(int argc, char const *argv[])
 	printf("is list empty? %s.\n", empty(head));
 	printf("Linked List contains %d elements.\n", size(head));
 
+	pop_front(head);
 	// check value of nodes at nth index
-	queryInput(head);
+	// queryInput(head);
 
 	print_list(head);
 
