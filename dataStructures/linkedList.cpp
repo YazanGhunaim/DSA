@@ -29,8 +29,8 @@ void init_list(node *p1, node *p2, node *p3){
 	p2->data = 2;
 	p2->next = p3;
 
-	p3->data = 0;
-	p3->next = NULL;
+	p2->data = 0;
+	p2->next = NULL;
 }
 
 // function to check if list is empty
@@ -72,19 +72,23 @@ int queryInput(node *head){
 }
 
 // add a node at the beginning of the list
-void push_front(int data, node **head){
+node * push_front(int data, node *head){
 	if (head == NULL)
 	{
 		node * newNode = (node *)malloc(sizeof(*newNode));
 		newNode->data = data;
-		*head = newNode;
+		head = newNode;
+
+		return newNode;
 	}
 	else
 	{
 		node * newNode = (node *)malloc(sizeof(*newNode));
 		newNode->data = data;
-		newNode->next = *head;
-		*head = newNode;
+		newNode->next = head;
+		head = newNode;
+
+		return newNode;
 	}
 }
 
@@ -100,7 +104,7 @@ int main(int argc, char const *argv[])
 
 	queryInput(&p1);
 
-	// push_front(6,&p1);;
+	// push_front(6,&p1);
 	// print_list(&p1);
 	
 
