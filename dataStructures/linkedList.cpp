@@ -24,10 +24,10 @@ int size(node *head)
 }
 
 // function to check if list is empty
-char *empty(node *head)
+const char *empty(node *head)
 {
-	char *yes = "yes";
-	char *no = "no";
+	const char *yes = "yes";
+	const char *no = "no";
 	return head == NULL ? yes : no;
 }
 
@@ -92,6 +92,16 @@ void pop_front(node *head){
 	temp->next	= (head->next)->next;
 	
 	head = temp;
+}
+
+// free all dynamically allocated memory
+void freeList(node *head){
+while(head)
+{
+	node * temp = head->next;
+	free(head);
+	head = temp;
+}
 }
 
 int main(int argc, char const *argv[])
