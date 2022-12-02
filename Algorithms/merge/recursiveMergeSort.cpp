@@ -67,7 +67,7 @@ int main(int argc, char const *argv[])
 	size_t l,h;
 	size_t sizeOfArray = sizeof(array)/sizeof(array[0]);
 	
-	getLowHigh(&l,&h);
+	getLowHigh(&l,&h,sizeOfArray);
 
 	mergeSort(array,l,h);
 
