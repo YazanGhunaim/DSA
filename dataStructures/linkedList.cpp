@@ -43,6 +43,7 @@ int value_at(node *head, int n)
 void print_list(node *head)
 {
 	node *temp = head;
+	printf("List is:\n");
 	while (temp != NULL)
 	{
 		printf("%d  ", temp->data);
@@ -70,20 +71,23 @@ void queryInput(node *head)
 // add a node at the beginning of the list
 void push_front(int data, node **head)
 {
-	if (head == NULL)
-	{
-		node *newNode = (node *)malloc(sizeof(*newNode));
-		newNode->data = data;
-		*head = newNode;
-	}
-	else
-	{
 		node *newNode = (node *)malloc(sizeof(*newNode));
 		newNode->data = data;
 		newNode->next = *head;
 		*head = newNode;
-	}
 }
+
+/* 
+-another way to implement push_front:
+node* push_front(int data, node * head){
+	node* newNode = (node *)malloc(sizeof(*newNode));
+	newNode->data = data;
+	newNode->next = head;
+	head = newNode;
+
+	return head;
+}
+*/
 
 // remove front element and return its value
 void pop_front(node *head){
