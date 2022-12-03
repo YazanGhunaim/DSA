@@ -108,6 +108,31 @@ while(head)
 }
 }
 
+// places an element at the end of the linked list
+void push_back(node * head, int value){
+	
+	node * newNode = (node *)malloc(sizeof(*newNode));
+	
+	// if linked list is empty
+	if (head == NULL)
+	{
+		newNode->data = value;
+		newNode->next = NULL;
+		head = newNode;
+	}
+	else{
+		node * temp = head;
+
+		while(temp->next != NULL){
+			temp = temp->next;
+		}
+
+		newNode->data = value;
+		newNode->next = NULL;
+		temp->next = newNode;
+	}
+}
+
 int main(int argc, char const *argv[])
 {
 	node *head = NULL;
@@ -124,6 +149,7 @@ int main(int argc, char const *argv[])
 	pop_front(head);
 	// check value of nodes at nth index
 	// queryInput(head);
+	push_back(head, 99);
 
 	print_list(head);
 
