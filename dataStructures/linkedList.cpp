@@ -89,15 +89,6 @@ node* push_front(int data, node * head){
 }
 */
 
-// remove front element and return its value
-void pop_front(node *head){
-	node * temp = head;
-	temp->data	= (head->next)->data;
-	temp->next	= (head->next)->next;
-	
-	head = temp;
-}
-
 // free all dynamically allocated memory
 void freeList(node *head){
 while(head)
@@ -133,6 +124,49 @@ void push_back(node * head, int value){
 	}
 }
 
+// removes an end item and returns its value
+
+// TODO:
+// int pop_back(node *head){
+// 	node * temp = head;
+
+// 	while ((temp->next)->next != NULL){
+// 		temp = temp->next;
+// 	}
+// 	temp->next = NULL;
+// }
+
+// remove front element and return its value
+// TODO:
+void pop_front(node *head){
+	node * temp = head;
+	temp->data	= (head->next)->data;
+	temp->next	= (head->next)->next;
+	
+	head = temp;
+}
+
+// insert node at nth position in linked list
+void insert_at(node *head, int value, int n){
+	// empty -- out of bounds
+	node *temp1 = (node *)malloc(sizeof(*temp1));
+	temp1->data = value;
+	temp1->next = NULL;
+	if (n == 1)
+	{
+		temp1->next = head;
+		head = temp1;
+		return;
+	}
+	node *temp2 = head;
+	for (int i = 0; i < n - 2; ++i)
+	{
+		temp2 = temp2->next;
+	}
+	temp1->next	= temp2->next;
+	temp2->next = temp1;
+}
+
 int main(int argc, char const *argv[])
 {
 	node *head = NULL;
@@ -147,11 +181,12 @@ int main(int argc, char const *argv[])
 	printf("Linked List contains %d elements.\n", size(head));
 
 	pop_front(head);
-	// check value of nodes at nth index
-	// queryInput(head);
 	push_back(head, 99);
+	insert_at(head,420,3);
 
 	print_list(head);
 
+	// check value of nodes at nth index
+	queryInput(head);
 	return 0;
 }
