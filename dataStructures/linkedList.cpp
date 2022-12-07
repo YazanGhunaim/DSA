@@ -5,7 +5,7 @@
 typedef struct node
 {
 	int data;
-	node *next;
+	struct node *next;
 } node;
 
 // returns number of elements in a linked list
@@ -167,6 +167,25 @@ void insert_at(node *head, int value, int n){
 	temp2->next = temp1;
 }
 
+// delete node at nth position
+void Delete(node ** head, int n){
+	
+	node * temp1 = *head;
+	if (!n){
+		*head = temp1 -> next;
+		free(temp1);
+		return;
+	}
+
+	int i;
+	for(i = 0; i < n - 1; ++i)
+		temp1 = temp1->next;
+	// tmp1 now points to (n - 1)th node
+	node * temp2 = temp1->next; // points to nth node
+	temp1 -> next = temp2 -> next;
+	free(temp2);
+}
+
 int main(int argc, char const *argv[])
 {
 	node *head = NULL;
@@ -186,7 +205,15 @@ int main(int argc, char const *argv[])
 
 	print_list(head);
 
+	int position;
+	scanf("%d", &position);
+
+	Delete(&head, position);
+
+	print_list(head);
+
+
 	// check value of nodes at nth index
-	queryInput(head);
+	// queryInput(head);
 	return 0;
 }
