@@ -186,6 +186,25 @@ void Delete(node ** head, int n){
 	free(temp2);
 }
 
+// reverse linked list 
+void reverse(node **head){
+	node * current = *head;
+	node * prev = NULL;
+	node * next = NULL;
+
+	while (current != NULL)
+	{
+		next = current -> next;
+
+		current -> next = prev;
+
+		prev = current;
+		current = next;
+	}
+
+	*head = prev;
+}
+
 int main(int argc, char const *argv[])
 {
 	node *head = NULL;
@@ -212,6 +231,9 @@ int main(int argc, char const *argv[])
 
 	print_list(head);
 
+	reverse(&head);
+
+	print_list(head);
 
 	// check value of nodes at nth index
 	// queryInput(head);
