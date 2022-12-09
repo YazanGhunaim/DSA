@@ -35,7 +35,9 @@ int back(node *head);
 // insert item at nth position in list
 void insertAt(node **head, int data, int index);
 // removes node at given index
-void erase(node *head, int index);
+void erase(node **head, int index);
+// reverse linked list
+void reverse(node **head);
 
 int main()
 {
@@ -75,8 +77,15 @@ int main()
 		   head->next->next->next->data == 15 && head->next->next->next->next->data == 400 &&
 		   head->next->next->next->next->next == NULL);
 
-	erase(head, 0);
-	print(head);
+	erase(&head, 0);
+	assert(head->data == 2 && head->next->data == 19 && head->next->next->data == 15 &&
+		   head->next->next->next->data == 400  &&
+		   head->next->next->next->next == NULL);
+
+	reverse(&head);
+	assert(head->data == 400  && head->next->data == 15 && head->next->next->data == 19 &&
+		   head->next->next->next->data == 2  &&
+		   head->next->next->next->next == NULL);
 
 	freeList(head);
 
@@ -254,7 +263,7 @@ void insertAt(node **head, int data, int index)
 	}
 }
 
-void erase(node *head, int index)
+void erase(node **head, int index)
 {
 	// Check if the linked list is empty
 	if (head == NULL)
@@ -264,10 +273,10 @@ void erase(node *head, int index)
 	if (index == 0)
 	{
 		// Store a pointer to the head of the list
-		node *temp = head;
+		node *temp = *head;
 
 		// Set the head of the list to point to the next node in the list
-		head = head->next;
+		*head = (*head)->next;
 
 		// Free the memory allocated for the original head of the list
 		free(temp);
@@ -277,7 +286,7 @@ void erase(node *head, int index)
 	}
 
 	// Store a pointer to the current node
-	node *current = head;
+	node *current = *head;
 
 	// Iterate through the linked list until we reach the node before the one we want to delete
 	for (int i = 0; i < index - 1; i++)
@@ -302,4 +311,24 @@ void erase(node *head, int index)
 
 	// Free the memory allocated for the node we want to delete
 	free(temp);
+}
+
+void reverse(node **head)
+{
+	node *current = *head;
+	node *prev = NULL;
+	node *next = NULL;
+
+	while (current)
+	{
+
+		next = current->next;
+
+		current->next = prev;
+
+		prev = current;
+		current = next;
+	}
+
+	*head = prev;
 }
