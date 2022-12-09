@@ -17,7 +17,7 @@ void print(node *head);
 // returns size of linked list
 void sizeOflist(node *head, int *size);
 // free dynamically allocated memory occupied by the linked list nodes
-void freeList(node *head);
+void freeList(node **head);
 // returns true if linked list is empty
 bool empty(node *head);
 // returns value of nth node
@@ -35,7 +35,11 @@ int back(node *head);
 // insert item at nth position in list
 void insertAt(node **head, int data, int index);
 // removes node at given index
-void erase(node *head, int index);
+void erase(node **head, int index);
+// reverse linked list
+void reverse(node **head);
+// recursively reverse a linked list
+node * recursiveReverse(node *ptr);
 
 int main()
 {
@@ -75,10 +79,23 @@ int main()
 		   head->next->next->next->data == 15 && head->next->next->next->next->data == 400 &&
 		   head->next->next->next->next->next == NULL);
 
-	erase(head, 0);
-	print(head);
+	erase(&head, 0);
+	assert(head->data == 2 && head->next->data == 19 && head->next->next->data == 15 &&
+		   head->next->next->next->data == 400  &&
+		   head->next->next->next->next == NULL);
 
-	freeList(head);
+	reverse(&head);
+	assert(head->data == 400  && head->next->data == 15 && head->next->next->data == 19 &&
+		   head->next->next->next->data == 2  &&
+		   head->next->next->next->next == NULL);
+
+	head = recursiveReverse(head);
+	assert(head->data == 2 && head->next->data == 19 && head->next->next->data == 15 &&
+			head->next->next->next->data == 400  &&
+			head->next->next->next->next == NULL);
+	
+	freeList(&head);
+	assert(empty(head));
 
 	return EXIT_SUCCESS;
 }
@@ -125,14 +142,17 @@ void sizeOflist(node *head, int *size)
 	*size = count;
 }
 
-void freeList(node *head)
-{
-	while (head)
+void freeList(node **head)
+{	
+	node * current = *head;
+	node * next;
+	while (current)
 	{
-		node *tmp = head->next;
-		free(head);
-		head = tmp;
+		next = current->next;
+		free(current);
+		current = next;
 	}
+*head = NULL;
 }
 
 bool empty(node *head)
@@ -254,7 +274,7 @@ void insertAt(node **head, int data, int index)
 	}
 }
 
-void erase(node *head, int index)
+void erase(node **head, int index)
 {
 	// Check if the linked list is empty
 	if (head == NULL)
@@ -264,10 +284,10 @@ void erase(node *head, int index)
 	if (index == 0)
 	{
 		// Store a pointer to the head of the list
-		node *temp = head;
+		node *temp = *head;
 
 		// Set the head of the list to point to the next node in the list
-		head = head->next;
+		*head = (*head)->next;
 
 		// Free the memory allocated for the original head of the list
 		free(temp);
@@ -277,7 +297,7 @@ void erase(node *head, int index)
 	}
 
 	// Store a pointer to the current node
-	node *current = head;
+	node *current = *head;
 
 	// Iterate through the linked list until we reach the node before the one we want to delete
 	for (int i = 0; i < index - 1; i++)
@@ -297,9 +317,43 @@ void erase(node *head, int index)
 	if (temp == NULL)
 		return;
 
-	// Set the next pointer of the current node to point to the node after the one we want to delete
+	//Set the next pointer of the current node to point to the node after the one we want to delete
 	current->next = temp->next;
 
 	// Free the memory allocated for the node we want to delete
 	free(temp);
+}
+
+void reverse(node **head)
+{
+	node *current = *head;
+	node *prev = NULL;
+	node *next = NULL;
+
+	while (current)
+	{
+
+		next = current->next;
+
+		current->next = prev;
+
+		prev = current;
+		current = next;
+	}
+
+	*head = prev;
+}
+
+node * recursiveReverse(node *ptr){
+	node * head = NULL;
+	if(ptr -> next == NULL){
+		head = ptr;
+		return head;
+	}
+	head = recursiveReverse(ptr->next);
+	node * temp = ptr -> next;
+	temp -> next = ptr;
+	ptr -> next = NULL;
+
+	return head;
 }
