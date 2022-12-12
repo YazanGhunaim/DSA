@@ -40,6 +40,8 @@ void erase(node **head, int index);
 void reverse(node **head);
 // recursively reverse a linked list
 node * recursiveReverse(node *ptr);
+// given a list in increasing order and a single node, inset it in the appropriate position
+void sortedInsert(node **head, node * newNode);
 
 int main()
 {
@@ -356,4 +358,31 @@ node * recursiveReverse(node *ptr){
 	ptr -> next = NULL;
 
 	return head;
+}
+
+void sortedInsert(node ** head, node * newNode){
+     
+    // case 2 one node bigger than newNode
+    if(!(*head) || (*head) -> data > newNode -> data){
+        newNode -> next = *head;
+        *head = newNode;
+        return;
+    }
+
+    // case 1 one node smaller than newNode
+    if(!(*head) -> next && (*head) -> data < newNode -> data){
+       (*head) -> next = newNode;
+        newNode -> next = NULL;
+        return;
+    }
+    
+    // to iterate through the list w/o modifying it
+    node * temp = *head;
+    
+    while(temp -> next && (temp -> next -> data < newNode -> data))
+        temp = temp -> next;
+    
+    newNode -> next = temp -> next;
+    temp -> next = newNode;
+    return;
 }
