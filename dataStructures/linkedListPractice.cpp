@@ -41,7 +41,11 @@ void reverse(node **head);
 // recursively reverse a linked list
 node * recursiveReverse(node *ptr);
 // given a list in increasing order and a single node, inset it in the appropriate position
-void sortedInsert(node **head, node * newNode);
+void sortedInsert(node ** head, node * newNode);
+// give a list rearrange its nodes so they are sorted in increasing order (using sortedInsert)
+void insertSort(node ** head);
+// takes two lists a and b, appends b onto the end of a and then sets b to NULL
+void appendLists(node ** a, node ** b);
 
 int main()
 {
@@ -96,7 +100,25 @@ int main()
 			head->next->next->next->data == 400  &&
 			head->next->next->next->next == NULL);
 	
-	freeList(&head);
+
+    node * newNode = (node *)malloc(sizeof(*newNode));
+    newNode->data = 4;
+    newNode->next = NULL;
+
+    node * list2 = NULL;
+	pushFront(&list2, 15);
+	assert(list2->data == 15 && list2->next == NULL);
+
+	pushFront(&list2, 2);
+	assert(list2->data == 2 && list2->next->data == 15);
+
+    sortedInsert(&list2,newNode);
+
+    assert(list2->data == 2 && list2->next->data == 4 && list2->next->next->data == 15);
+    
+    appendLists(&head,&list2);
+    print(head);
+    freeList(&head);
 	assert(empty(head));
 
 	return EXIT_SUCCESS;
@@ -361,28 +383,49 @@ node * recursiveReverse(node *ptr){
 }
 
 void sortedInsert(node ** head, node * newNode){
-     
-    // case 2 one node bigger than newNode
-    if(!(*head) || (*head) -> data > newNode -> data){
+    if(!(*head) || (*head) -> data >= newNode -> data){
         newNode -> next = *head;
         *head = newNode;
-        return;
     }
 
-    // case 1 one node smaller than newNode
-    if(!(*head) -> next && (*head) -> data < newNode -> data){
-       (*head) -> next = newNode;
-        newNode -> next = NULL;
-        return;
-    }
-    
-    // to iterate through the list w/o modifying it
-    node * temp = *head;
-    
-    while(temp -> next && (temp -> next -> data < newNode -> data))
+    node *temp = *head;
+    while(temp && temp -> next && temp -> next -> data < newNode -> data)
         temp = temp -> next;
-    
+
     newNode -> next = temp -> next;
     temp -> next = newNode;
-    return;
 }
+
+void insertSort(node ** head){
+    if(!*head || !(*head) -> next) return;
+    node * result = NULL;
+    node * temp = *head;
+    node * next;
+    
+    while(temp){
+        next = temp -> next;
+        sortedInsert(&result,temp);
+        temp = next;
+    }
+
+    *head = result;
+}
+
+void appendLists(node ** a, node ** b){
+    if(!*a){
+        *a = *b;
+        return;
+    }
+    if(!*b) 
+        return;
+
+    node * tempA = *a;
+   
+    while(tempA -> next)
+        tempA = tempA -> next;
+    
+    tempA -> next = *b;
+
+    *b = NULL;
+}
+
