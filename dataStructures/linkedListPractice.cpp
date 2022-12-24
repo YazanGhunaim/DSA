@@ -473,6 +473,7 @@ void removeDuplicates(node * head){
             free(current -> next);
             current -> next = nextnext;
         }
-        current = current -> next;
+        else
+            current = current -> next;
     }
 }
