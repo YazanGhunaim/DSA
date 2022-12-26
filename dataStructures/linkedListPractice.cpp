@@ -50,7 +50,8 @@ void appendLists(node ** a, node ** b);
 void frontBackSplit(node *head, node ** front, node ** back);
 // taking an increasingly order sorted list remove all duplicates
 void removeDuplicates(node * head);
-
+// takes first node from second list and pushes it at the beginning of the first list
+void moveNode(node ** head1,node ** head2);
 int main()
 {
 	node *head = NULL;
@@ -126,6 +127,9 @@ int main()
     print(head);
     frontBackSplit(head,&front,&back);
     print(front);
+    print(back);
+
+    moveNode(&back,&front);
     print(back);
     freeList(&head);
 	assert(empty(head));
@@ -445,9 +449,8 @@ void frontBackSplit(node *head, node ** front, node ** back){
         *back = NULL;
     }
 
-    node *prev, *slow, *fast;
+    node *slow, *fast;
     slow = fast = head;
-    prev = NULL;
 
     while(fast && fast -> next)
     {
@@ -471,9 +474,17 @@ void removeDuplicates(node * head){
         if(current -> data == current -> next -> data){
             node * nextNext = current -> next -> next;
             free(current -> next);
-            current -> next = nextnext;
+            current -> next = nextNext;
         }
         else
             current = current -> next;
     }
+}
+
+void moveNode(node ** head1,node ** head2){
+    node * newNode = *head2;
+    *head2 = newNode -> next;
+
+    newNode -> next = *head1;
+    *head1 = newNode;
 }
