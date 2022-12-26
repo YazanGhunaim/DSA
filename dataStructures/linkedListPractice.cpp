@@ -46,7 +46,12 @@ void sortedInsert(node ** head, node * newNode);
 void insertSort(node ** head);
 // takes two lists a and b, appends b onto the end of a and then sets b to NULL
 void appendLists(node ** a, node ** b);
-
+// split the list into two parts/ if number of elements is odd extra element should go to the first part of the list
+void frontBackSplit(node *head, node ** front, node ** back);
+// taking an increasingly order sorted list remove all duplicates
+void removeDuplicates(node * head);
+// takes first node from second list and pushes it at the beginning of the first list
+void moveNode(node ** head1,node ** head2);
 int main()
 {
 	node *head = NULL;
@@ -117,7 +122,15 @@ int main()
     assert(list2->data == 2 && list2->next->data == 4 && list2->next->next->data == 15);
     
     appendLists(&head,&list2);
+    
+    node *front = NULL; node *back = NULL;
     print(head);
+    frontBackSplit(head,&front,&back);
+    print(front);
+    print(back);
+
+    moveNode(&back,&front);
+    print(back);
     freeList(&head);
 	assert(empty(head));
 
@@ -151,6 +164,7 @@ void print(node *head)
 		printf("%d ", tmp->data);
 		tmp = tmp->next;
 	}
+    printf("\n");
 }
 
 void sizeOflist(node *head, int *size)
@@ -429,3 +443,48 @@ void appendLists(node ** a, node ** b){
     *b = NULL;
 }
 
+void frontBackSplit(node *head, node ** front, node ** back){
+    if(!head || !head -> next){
+        *front = head;
+        *back = NULL;
+    }
+
+    node *slow, *fast;
+    slow = fast = head;
+
+    while(fast && fast -> next)
+    {
+        slow = slow -> next;
+        fast = fast -> next -> next;
+    }
+
+
+    *front = head;
+    *back = slow -> next;
+    slow -> next = NULL;
+}
+
+void removeDuplicates(node * head){
+    if(!head || !head -> next) return;
+
+    node *current = head;
+
+    while(current -> next)
+    {
+        if(current -> data == current -> next -> data){
+            node * nextNext = current -> next -> next;
+            free(current -> next);
+            current -> next = nextNext;
+        }
+        else
+            current = current -> next;
+    }
+}
+
+void moveNode(node ** head1,node ** head2){
+    node * newNode = *head2;
+    *head2 = newNode -> next;
+
+    newNode -> next = *head1;
+    *head1 = newNode;
+}
